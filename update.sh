@@ -42,7 +42,7 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-if [ -f /boot/adsbfi-config.txt ]; then
+if [ -f /boot/adsbaamt-config.txt ]; then
     echo --------
     echo "You are using the adsb.fi image, the feed setup script does not need to be installed."
     echo --------
@@ -101,10 +101,10 @@ function getGIT() {
     echo "--- end getGIT() ---"
 }
 
-REPO="https://github.com/adsbfi/adsb-fi-scripts.git"
+REPO="https://github.com/adsbaamt/adsb-fi-scripts.git"
 BRANCH="master"
 
-IPATH=/usr/local/share/adsbfi
+IPATH=/usr/local/share/adsbaamt
 GIT="$IPATH/git"
 mkdir -p $IPATH
 
@@ -127,12 +127,12 @@ if diff "$GIT/update.sh" "$IPATH/update.sh" &>/dev/null; then
     exit $?
 fi
 
-if [ -f /boot/adsbfi-env ]; then
-    source /boot/adsbfi-env
+if [ -f /boot/adsbaamt-env ]; then
+    source /boot/adsbaamt-env
 else
-    source /etc/default/adsbfi
-    if ! grep -qs -e UAT_INPUT /etc/default/adsbfi; then
-        cat >> /etc/default/adsbfi <<"EOF"
+    source /etc/default/adsbaamt
+    if ! grep -qs -e UAT_INPUT /etc/default/adsbaamt; then
+        cat >> /etc/default/adsbaamt <<"EOF"
 
 # this is the source for 978 data, use port 30978 from dump978 --raw-port
 # if you're not receiving 978, don't worry about it, not doing any harm!
@@ -157,7 +157,7 @@ fi
 cp "$GIT/uninstall.sh" "$IPATH"
 cp "$GIT"/scripts/*.sh "$IPATH"
 
-UNAME=adsbfi
+UNAME=adsbaamt
 if ! id -u "${UNAME}" &>/dev/null
 then
     # 2nd syntax is for fedora / centos
@@ -184,17 +184,17 @@ echo
 bash "$IPATH/git/create-uuid.sh"
 
 VENV=$IPATH/venv
-if [[ -f /usr/local/share/adsbfi/venv/bin/python3.7 ]] && command -v python3.9 &>/dev/null;
+if [[ -f /usr/local/share/adsbaamt/venv/bin/python3.7 ]] && command -v python3.9 &>/dev/null;
 then
     rm -rf "$VENV"
 fi
 
 
-MLAT_REPO="https://github.com/adsbfi/mlat-client-adsbfi"
+MLAT_REPO="https://github.com/adsbaamt/mlat-client-adsbaamt"
 MLAT_BRANCH="master"
 MLAT_VERSION="$(git ls-remote $MLAT_REPO $MLAT_BRANCH | cut -f1 || echo $RANDOM-$RANDOM )"
 if [[ $REINSTALL != yes ]] && grep -e "$MLAT_VERSION" -qs $IPATH/mlat_version \
-    && grep -qs -e '#!' "$VENV/bin/mlat-client" && { systemctl is-active adsbfi-mlat &>/dev/null || [[ "${MLAT_DISABLED}" == "1" ]]; }
+    && grep -qs -e '#!' "$VENV/bin/mlat-client" && { systemctl is-active adsbaamt-mlat &>/dev/null || [[ "${MLAT_DISABLED}" == "1" ]]; }
 then
     echo
     echo "mlat-client already installed, git hash:"
@@ -242,26 +242,26 @@ fi
 
 echo 50
 
-# copy adsbfi-mlat service file
-cp "$GIT"/scripts/adsbfi-mlat.service /lib/systemd/system
+# copy adsbaamt-mlat service file
+cp "$GIT"/scripts/adsbaamt-mlat.service /lib/systemd/system
 
 echo 60
 
-if ls -l /etc/systemd/system/adsbfi-mlat.service 2>&1 | grep '/dev/null' &>/dev/null; then
+if ls -l /etc/systemd/system/adsbaamt-mlat.service 2>&1 | grep '/dev/null' &>/dev/null; then
     echo "--------------------"
-    echo "CAUTION, adsbfi-mlat is masked and won't run!"
+    echo "CAUTION, adsbaamt-mlat is masked and won't run!"
     echo "If this is unexpected for you, please report this issue."
     echo "--------------------"
     sleep 3
 else
     if [[ "${MLAT_DISABLED}" == "1" ]]; then
-        systemctl disable adsbfi-mlat || true
-        systemctl stop adsbfi-mlat || true
+        systemctl disable adsbaamt-mlat || true
+        systemctl stop adsbaamt-mlat || true
     else
-        # Enable adsbfi-mlat service
-        systemctl enable adsbfi-mlat >> $LOGFILE || true
-        # Start or restart adsbfi-mlat service
-        systemctl restart adsbfi-mlat || true
+        # Enable adsbaamt-mlat service
+        systemctl enable adsbaamt-mlat >> $LOGFILE || true
+        # Start or restart adsbaamt-mlat service
+        systemctl restart adsbaamt-mlat || true
     fi
 fi
 
@@ -269,16 +269,16 @@ echo 70
 
 # SETUP FEEDER TO SEND DUMP1090 DATA TO adsb.fi
 
-READSB_REPO="https://github.com/adsbfi/readsb.git"
+READSB_REPO="https://github.com/adsbaamt/readsb.git"
 READSB_BRANCH="master"
 if grep -E 'wheezy|jessie' /etc/os-release -qs; then
     READSB_BRANCH="jessie"
 fi
 READSB_VERSION="$(git ls-remote $READSB_REPO $READSB_BRANCH | cut -f1 || echo $RANDOM-$RANDOM )"
 READSB_GIT="$IPATH/readsb-git"
-READSB_BIN="$IPATH/feed-adsbfi"
+READSB_BIN="$IPATH/feed-adsbaamt"
 if [[ $REINSTALL != yes ]] && grep -e "$READSB_VERSION" -qs $IPATH/readsb_version \
-    && "$READSB_BIN" -V && systemctl is-active adsbfi-feed &>/dev/null
+    && "$READSB_BIN" -V && systemctl is-active adsbaamt-feed &>/dev/null
 then
     echo
     echo "Feed client already installed, git hash:"
@@ -315,19 +315,19 @@ fi
 
 #end compile readsb
 
-cp "$GIT"/scripts/adsbfi-feed.service /lib/systemd/system
+cp "$GIT"/scripts/adsbaamt-feed.service /lib/systemd/system
 
 echo 82
 
-if ! ls -l /etc/systemd/system/adsbfi-feed.service 2>&1 | grep '/dev/null' &>/dev/null; then
-    # Enable adsbfi-feed service
-    systemctl enable adsbfi-feed >> $LOGFILE || true
+if ! ls -l /etc/systemd/system/adsbaamt-feed.service 2>&1 | grep '/dev/null' &>/dev/null; then
+    # Enable adsbaamt-feed service
+    systemctl enable adsbaamt-feed >> $LOGFILE || true
     echo 92
-    # Start or restart adsbfi-feed service
-    systemctl restart adsbfi-feed || true
+    # Start or restart adsbaamt-feed service
+    systemctl restart adsbaamt-feed || true
 else
     echo "--------------------"
-    echo "CAUTION, adsbfi-feed.service is masked and won't run!"
+    echo "CAUTION, adsbaamt-feed.service is masked and won't run!"
     echo "If this is unexpected for you, please report this issue."
     echo "--------------------"
     sleep 3
@@ -335,24 +335,24 @@ fi
 
 echo 94
 
-systemctl is-active adsbfi-feed &>/dev/null || {
+systemctl is-active adsbaamt-feed &>/dev/null || {
     rm -f $IPATH/readsb_version
     echo "---------------------------------"
-    journalctl -u adsbfi-feed | tail -n10
+    journalctl -u adsbaamt-feed | tail -n10
     echo "---------------------------------"
-    echo "adsbfi-feed service couldn't be started, please report this error on Discord."
+    echo "adsbaamt-feed service couldn't be started, please report this error on Discord."
     echo "Try an copy as much of the output above and include it in your report, thank you!"
     echo "---------------------------------"
     exit 1
 }
 
 echo 96
-[[ "${MLAT_DISABLED}" == "1" ]] || systemctl is-active adsbfi-mlat &>/dev/null || {
+[[ "${MLAT_DISABLED}" == "1" ]] || systemctl is-active adsbaamt-mlat &>/dev/null || {
     rm -f $IPATH/mlat_version
     echo "---------------------------------"
-    journalctl -u adsbfi-mlat | tail -n10
+    journalctl -u adsbaamt-mlat | tail -n10
     echo "---------------------------------"
-    echo "adsbfi-mlat service couldn't be started, please report this error on Discord."
+    echo "adsbaamt-mlat service couldn't be started, please report this error on Discord."
     echo "Try an copy as much of the output above and include it in your report, thank you!"
     echo "---------------------------------"
     exit 1
@@ -360,7 +360,7 @@ echo 96
 
 # Remove old method of starting the feed scripts if present from rc.local
 # Kill the old adsb.fi scripts in case they are still running from a previous install including spawned programs
-for name in adsbfi-netcat_maint.sh adsbfi-socat_maint.sh adsbfi-mlat_maint.sh; do
+for name in adsbaamt-netcat_maint.sh adsbaamt-socat_maint.sh adsbaamt-mlat_maint.sh; do
     if grep -qs -e "$name" /etc/rc.local; then
         sed -i -e "/$name/d" /etc/rc.local || true
     fi
@@ -375,8 +375,8 @@ if grep -qs 'SERVER_HOSTPORT.*feed.adsb.fi' /etc/default/mlat-client &>/dev/null
     systemctl disable --now mlat-client >> $LOGFILE 2>&1 || true
 fi
 
-if [[ -f /etc/default/adsbfi ]]; then
-    sed -i -e 's/feed.adsb.fi,30004,beast_reduce_out,feed.adsb.fi,64004/feed.adsb.fi,30004,beast_reduce_out,feed.adsb.fi,64004/' /etc/default/adsbfi || true
+if [[ -f /etc/default/adsbaamt ]]; then
+    sed -i -e 's/feed.adsb.fi,30004,beast_reduce_out,feed.adsb.fi,64004/feed.adsb.fi,30004,beast_reduce_out,feed.adsb.fi,64004/' /etc/default/adsbaamt || true
 fi
 
 
@@ -396,7 +396,7 @@ Question? Issues? Go here:
 https://discord.gg/mzRugsPSEF
 
 Web interface to show the data transmitted? Run this command:
-sudo bash /usr/local/share/adsbfi/git/install-or-update-interface.sh
+sudo bash /usr/local/share/adsbaamt/git/install-or-update-interface.sh
 "
 
 INPUT_IP=$(echo $INPUT | cut -d: -f1)

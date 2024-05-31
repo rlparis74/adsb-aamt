@@ -31,7 +31,7 @@ set -e
 trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
 renice 10 $$ &>/dev/null
 
-IPATH=/usr/local/share/adsbfi
+IPATH=/usr/local/share/adsbaamt
 
 function abort() {
     echo ------------
@@ -47,9 +47,9 @@ BACKTITLETEXT="adsb.fi Setup Script"
 
 whiptail --backtitle "$BACKTITLETEXT" --title "$BACKTITLETEXT" --yesno "Thanks for choosing to share your data with adsb.fi!\n\nadsb.fi is a co-op of ADS-B/Mode S/MLAT feeders from around the world. This script will configure your current ADS-B receiver to feed data to adsb.fi.\n\nWould you like to continue setup?" 13 78 || abort
 
-ADSBFIUSERNAME=$(whiptail --backtitle "$BACKTITLETEXT" --title "Feeder MLAT Name" --nocancel --inputbox "\nPlease enter a unique name to be shown on the MLAT map (the pin will be offset for privacy)\n\nExample: \"william34-london\", \"william34-jersey\", etc.\nDisable MLAT: enter a zero: 0" 12 78 3>&1 1>&2 2>&3) || abort
+ADSBAAMTUSERNAME=$(whiptail --backtitle "$BACKTITLETEXT" --title "Feeder MLAT Name" --nocancel --inputbox "\nPlease enter a unique name to be shown on the MLAT map (the pin will be offset for privacy)\n\nExample: \"william34-london\", \"william34-jersey\", etc.\nDisable MLAT: enter a zero: 0" 12 78 3>&1 1>&2 2>&3) || abort
 
-NOSPACENAME="$(echo -n -e "${ADSBFIUSERNAME}" | tr -c '[a-zA-Z0-9]_\- ' '_')"
+NOSPACENAME="$(echo -n -e "${ADSBAAMTUSERNAME}" | tr -c '[a-zA-Z0-9]_\- ' '_')"
 
 if [[ "$NOSPACENAME" != 0 ]]; then
     whiptail --backtitle "$BACKTITLETEXT" --title "$BACKTITLETEXT" \
@@ -111,7 +111,7 @@ if [[ $(hostname) == "radarcape" ]] || pgrep rcd &>/dev/null; then
     INPUT_TYPE="radarcape_gps"
 fi
 
-tee /etc/default/adsbfi >/dev/null <<EOF
+tee /etc/default/adsbaamt >/dev/null <<EOF
 INPUT="$INPUT"
 REDUCE_INTERVAL="0.5"
 
@@ -139,7 +139,7 @@ INPUT_TYPE="$INPUT_TYPE"
 
 MLATSERVER="feed.adsb.fi:31090"
 TARGET="--net-connector feed.adsb.fi,30004,beast_reduce_plus_out,feed.adsb.fi,64004"
-NET_OPTIONS="--net-heartbeat 60 --net-ro-size 1280 --net-ro-interval 0.2 --net-ro-port 0 --net-sbs-port 0 --net-bi-port 30169 --net-bo-port 0 --net-ri-port 0 --write-json-every 1 --uuid-file /usr/local/share/adsbfi/adsbfi-uuid"
+NET_OPTIONS="--net-heartbeat 60 --net-ro-size 1280 --net-ro-interval 0.2 --net-ro-port 0 --net-sbs-port 0 --net-bi-port 30169 --net-bo-port 0 --net-ri-port 0 --write-json-every 1 --uuid-file /usr/local/share/adsbaamt/adsbaamt-uuid"
 JSON_OPTIONS="--max-range 450 --json-location-accuracy 2 --range-outline-hours 24"
 EOF
 

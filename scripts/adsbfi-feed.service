@@ -1,19 +1,19 @@
 
 [Unit]
-Description=adsbfi-feed
+Description=adsbaamt-feed
 Wants=network.target
 After=network.target
 
 [Service]
-User=adsbfi
-RuntimeDirectory=adsbfi-feed
-ExecStart=/usr/local/share/adsbfi/adsbfi-feed.sh
+User=adsbaamt
+RuntimeDirectory=adsbaamt-feed
+ExecStart=/usr/local/share/adsbaamt/adsbaamt-feed.sh
 Type=simple
 Restart=always
 RestartSec=30
 StartLimitInterval=1
 StartLimitBurst=100
-SyslogIdentifier=adsbfi-feed
+SyslogIdentifier=adsbaamt-feed
 Nice=-1
 
 [Install]
