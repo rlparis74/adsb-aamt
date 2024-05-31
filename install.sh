@@ -2,7 +2,7 @@
 set -e
 
 REPO="https://github.com/adsbaamt/adsb-fi-scripts.git"
-BRANCH="master"
+BRANCH="AAMTv1"
 IPATH=/usr/local/share/adsbaamt
 mkdir -p $IPATH
 
