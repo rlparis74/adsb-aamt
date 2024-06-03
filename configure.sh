@@ -31,7 +31,7 @@ set -e
 trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
 renice 10 $$ &>/dev/null
 
-IPATH=/usr/local/share/adsbaamt
+IPATH=/usr/local/share/adsb-aamt
 
 function abort() {
     echo ------------
