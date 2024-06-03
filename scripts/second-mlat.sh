@@ -19,7 +19,7 @@ EnvironmentFile=/etc/default/adsb-aamt
 ExecStart=/usr/local/share/adsb-aamt/venv/bin/mlat-client \
     --input-type $INPUT_TYPE --no-udp \
     --input-connect $INPUT \
-    --server feed.adsb.fi:SERVERPORT \
+    --server 192.168.2.253:SERVERPORT \
     --user $USER \
     --lat $LATITUDE \
     --lon $LONGITUDE \
