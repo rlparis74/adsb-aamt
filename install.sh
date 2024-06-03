@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-REPO="git@github.com:adsbaamt/adsb-fi-scripts.git"
+REPO="git@github.com:rlparis74/adsb-aamt.git"
 BRANCH="master"
 IPATH=/usr/local/share/adsb-aamt
 mkdir -p $IPATH
