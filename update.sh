@@ -376,7 +376,7 @@ if grep -qs 'SERVER_HOSTPORT.*feed.adsb.fi' /etc/default/mlat-client &>/dev/null
 fi
 
 if [[ -f /etc/default/adsb-aamt ]]; then
-    sed -i -e 's/feed.adsb.fi,30004,beast_reduce_out,feed.adsb.fi,64004/feed.adsb.fi,30004,beast_reduce_out,feed.adsb.fi,64004/' /etc/default/adsb-aamt || true
+    sed -i -e 's/192.168.2.253,30004,beast_reduce_out,192.168.2.253,64004/192.168.2.253,30004,beast_reduce_out,192.168.2.253,64004/' /etc/default/adsb-aamt || true
 fi
 
 
