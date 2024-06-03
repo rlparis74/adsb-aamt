@@ -31,7 +31,7 @@ set -e
 trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
 renice 10 $$ &>/dev/null
 
-IPATH=/usr/local/share/adsbfi
+IPATH=/usr/local/share/adsb-aamt
 
 function abort() {
     echo ------------
@@ -111,7 +111,7 @@ if [[ $(hostname) == "radarcape" ]] || pgrep rcd &>/dev/null; then
     INPUT_TYPE="radarcape_gps"
 fi
 
-tee /etc/default/adsbfi >/dev/null <<EOF
+tee /etc/default/adsb-aamt >/dev/null <<EOF
 INPUT="$INPUT"
 REDUCE_INTERVAL="0.5"
 
