@@ -101,7 +101,7 @@ function getGIT() {
     echo "--- end getGIT() ---"
 }
 
-REPO="https://github.com/adsb-aamt/adsb-aamt-scripts.git"
+REPO="git@github.com:rlparis74/adsb-aamt.git"
 BRANCH="master"
 
 IPATH=/usr/local/share/adsb-aamt
@@ -190,7 +190,7 @@ then
 fi
 
 
-MLAT_REPO="git@github.com:adsbaamt/mlat-client-adsbaamt.git"
+MLAT_REPO="git@github.com:rlparis74/mlat-client-adsb-aamt.git"
 MLAT_BRANCH="master"
 MLAT_VERSION="$(git ls-remote $MLAT_REPO $MLAT_BRANCH | cut -f1 || echo $RANDOM-$RANDOM )"
 if [[ $REINSTALL != yes ]] && grep -e "$MLAT_VERSION" -qs $IPATH/mlat_version \
@@ -269,7 +269,7 @@ echo 70
 
 # SETUP FEEDER TO SEND DUMP1090 DATA TO adsb.fi
 
-READSB_REPO="git@github.com:adsbaamt/readsb.git"
+READSB_REPO="git@github.com:rlparis74/readsb.git"
 READSB_BRANCH="master"
 if grep -E 'wheezy|jessie' /etc/os-release -qs; then
     READSB_BRANCH="jessie"
