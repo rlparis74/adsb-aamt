@@ -4,7 +4,7 @@ if grep -qs -e 'LATITUDE' /boot/adsb-config.txt &>/dev/null && [[ -f /boot/adsb-
     source /boot/adsb-config.txt
     source /boot/adsb-aamt-env
 else
-    source /etc/default/
+    source /etc/default/adsb-aamt
 fi
 
 if ! [[ -d /run/adsb-aamt-feed/ ]]; then
