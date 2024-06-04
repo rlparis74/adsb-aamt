@@ -19,7 +19,7 @@ EnvironmentFile=/etc/default/adsb-aamt
 ExecStart=/usr/local/share/adsb-aamt/venv/bin/mlat-client \
     --input-type $INPUT_TYPE --no-udp \
     --input-connect $INPUT \
-    --server 192.168.2.253:SERVERPORT \
+    --server rlparis74.ddns.net:SERVERPORT \
     --user $USER \
     --lat $LATITUDE \
     --lon $LONGITUDE \
