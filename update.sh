@@ -376,7 +376,7 @@ if grep -qs 'SERVER_HOSTPORT.*feed.adsb.fi' /etc/default/mlat-client &>/dev/null
 fi
 
 if [[ -f /etc/default/adsb-aamt ]]; then
-    sed -i -e 's/15.222.5.50,30004,beast_reduce_out,15.222.5.50,64004/rlparis74.ddns.net,30004,beast_reduce_out,15.222.5.50,64004/' /etc/default/adsb-aamt || true
+    sed -i -e 's/aamt.alfaaero.com,30004,beast_reduce_out,aamt.alfaaero.com,64004/aamt.alfaaero.com,30004,beast_reduce_out,aamt.alfaaero.com,64004/' /etc/default/adsb-aamt || true
 fi
 
 
